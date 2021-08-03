@@ -1,5 +1,3 @@
-package pacMan3;
-
 /**
  * It's a Node for LinkedLists.
  * 
