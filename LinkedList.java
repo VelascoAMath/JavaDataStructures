@@ -75,16 +75,32 @@ public class LinkedList<E> {
 	}
 
 	public void add(E newItem, int index) {
-		if (index > numItems)
+		if (index > numItems || index < 0)
 			throw new IndexOutOfBoundsException("Out of Bounds!");
 
-		Node<E> curr = head;
-		while (curr.next != null) {
-			curr = curr.next;
+		// Don't need to check index because the previous error check already does
+		if (numItems == 0) {
+			addLast(newItem);
+		} else if (index == numItems) {
+			addLast(newItem);
+		}
+		else if (index == 0) {
+			addFirst(newItem);
+		}
+		else {
+
+			Node<E> curr = head;
+
+			for(int i = 1; i < index; i++, curr = curr.next) {
+				
+			}
+
+			Node<E> newNode = new Node<E>(newItem, curr.next);
+			curr.next = newNode;
+
+			numItems++;
 		}
 
-		curr.next = new Node<E>(newItem);
-		numItems++;
 	}
 
 	/**
@@ -123,7 +139,6 @@ public class LinkedList<E> {
 		}
 		if (index > numItems || index < 0)
 			throw new IndexOutOfBoundsException("Out of Bounds!");
-		
 
 		Node<E> curr = head;
 		for (int i = 0; i < index; i++)
@@ -181,11 +196,10 @@ public class LinkedList<E> {
 		E result = null;
 		Node<E> curr = head;
 
-		
 		for (int count = 1; count < i; count++) {
 			curr = curr.next;
 		}
-		
+
 		result = curr.next.item;
 		curr.next = curr.next.next;
 
@@ -227,19 +241,23 @@ public class LinkedList<E> {
 	}
 
 	public String toString() {
-		if (head == null)
+		if (numItems == 0)
 			return "[]";
-		else {
+		else if (numItems == 1) {
+			return "[" + head.item + "]";
+		} else {
+
+			StringBuilder s = new StringBuilder("[");
 			Node<E> curr = head;
-			String s = "[" + curr.item;
-			curr = curr.next;
-			while (curr.next != null) {
-				s += ", " + curr.item;
-				curr = curr.next;
+			for (; curr.next != null; curr = curr.next) {
+				s.append(curr.item);
+				s.append(", ");
+
 			}
 
-			s = s + ", " + curr.item + "]";
-			return s;
+			s.append(curr.item);
+			s.append(']');
+			return s.toString();
 		}
 	}
 
@@ -257,7 +275,6 @@ public class LinkedList<E> {
 //			System.out.println(a.removeLast());
 //		}
 //	}
-
 
 	/**
 	 * It's a Node for LinkedLists.
@@ -298,5 +315,3 @@ public class LinkedList<E> {
 		}
 	}
 }
-
-
