@@ -10,11 +10,23 @@ import org.junit.jupiter.api.Test;
 class LinkedListTest {
 	int testSize = 10000;
 
-//	@Test
-//	void testLinkedList() {
-//		fail("Not yet implemented");
-//	}
-//
+	@Test
+	void testLinkedList() {
+		LinkedList<Integer> test = new LinkedList<>();
+		if (test.lastSelectedIndex != -1) {
+			fail("Last Selected Index is " + test.lastSelectedIndex + " instead of -1!");
+		}
+		if(test.lastSelectedNode != null) {
+			fail("Last selected node is set to " + test.lastSelectedNode + " instead of null!");
+		}
+		if(test.head != null) {
+			fail("Head is set to " + test.head + " instead of null!");
+		}
+		if(test.size() != 0) {
+			System.out.println("Size is " + test.size() + " instead of 0!");
+		}
+	}
+
 	@Test
 	void testIsEmpty() {
 		LinkedList<Integer> test = new LinkedList<>();
@@ -50,8 +62,8 @@ class LinkedListTest {
 				if (numItems == 0 && !test.isEmpty()) {
 					fail("List isn't empty even when it has no items!");
 				}
-				
-				if(test.lastSelectedIndex < -1) {
+
+				if (test.lastSelectedIndex < -1) {
 					fail("Last index is less than -1!");
 				}
 			}
@@ -302,9 +314,6 @@ class LinkedListTest {
 
 		for (int i = 0; i < testSize; i++) {
 			test.addFirst(i);
-			if (test.lastSelectedIndex != i) {
-				fail("LastSelectedIndex(" + test.lastSelectedIndex + ") isn't " + i + " for some reason!");
-			}
 
 			try {
 				if (test.getFirst() != test.get(0)) {

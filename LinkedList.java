@@ -61,14 +61,6 @@ public class LinkedList<E> {
 		return numItems;
 	}
 
-//	private Node<E> find(int index) {
-//		Node<E> curr = head;
-//		for (int skip = 1; skip < index; skip++) {
-//			curr = curr.next;
-//		}
-//		return curr;
-//	}
-
 	/**
 	 * Adds an item to the end of the list.
 	 * 
@@ -90,28 +82,18 @@ public class LinkedList<E> {
 		} else if (index == 0) {
 			addFirst(newItem);
 		} else {
-			Node<E> curr = null;
-			if (lastSelectedIndex < index) {
-				curr = lastSelectedNode;
-				for (int i = lastSelectedIndex + 1; i < index; i++) {
-					curr = curr.next;
-				}
-				lastSelectedIndex = index;
-				Node<E> newNode = new Node<E>(newItem, curr.next);
-				lastSelectedNode = newNode;
-				curr.next = newNode;
+			if (index <= lastSelectedIndex) {
+				lastSelectedNode = head;
+				lastSelectedIndex = 0;
 
-			} else {
-				curr = head;
-
-				for (int i = 1; i < index; i++, curr = curr.next) {
-
-				}
-				lastSelectedIndex = index;
-				Node<E> newNode = new Node<E>(newItem, curr.next);
-				curr.next = newNode;
-				lastSelectedNode = newNode;
 			}
+			
+			for (; lastSelectedIndex < index - 1; lastSelectedIndex++) {
+				lastSelectedNode = lastSelectedNode.next;
+			}
+
+			Node<E> newNode = new Node<E>(newItem, lastSelectedNode.next);
+			lastSelectedNode.next = newNode;
 
 			numItems++;
 		}
@@ -124,9 +106,9 @@ public class LinkedList<E> {
 	 * @param firstItem - the item to add to the beginning of the list
 	 */
 	public void addFirst(E firstItem) {
-		Node<E> curr = new Node<E>(firstItem);
-		curr.next = head;
-		head = curr;
+		Node<E> newNode = new Node<E>(firstItem);
+		newNode.next = head;
+		head = newNode;
 		if (lastSelectedIndex == -1) {
 			lastSelectedIndex = 0;
 			lastSelectedNode = head;
@@ -142,19 +124,12 @@ public class LinkedList<E> {
 			lastSelectedIndex = 0;
 			lastSelectedNode = head;
 		} else {
-			Node<E> curr = lastSelectedNode;
-			while (curr.next != null)
-				curr = curr.next;
+			while (lastSelectedNode.next != null) {
+				lastSelectedNode = lastSelectedNode.next;
+				lastSelectedIndex++;
+			}
 
-			// We are deliberately setting the last selected node to be the second to last
-			// node instead of last
-			// We are doing this because if we have to remove the last node, curr has to be
-			// the second to last node
-			lastSelectedNode = curr;
-			// Since numItems hasn't been updated, the index will (correctly) be the second
-			// to last index
-			lastSelectedIndex = numItems - 1;
-			curr.next = new Node<E>(lastItem);
+			lastSelectedNode.next = new Node<E>(lastItem);
 		}
 
 		numItems++;
@@ -171,11 +146,15 @@ public class LinkedList<E> {
 		if (index > numItems || index < 0)
 			throw new IndexOutOfBoundsException("Out of Bounds!");
 
-		Node<E> curr = head;
-		for (int i = 0; i < index; i++)
-			curr = curr.next;
+		if (lastSelectedIndex > index) {
+			lastSelectedNode = head;
+			lastSelectedIndex = 0;
+		}
 
-		return curr.item;
+		for (; lastSelectedIndex < index; lastSelectedIndex++)
+			lastSelectedNode = lastSelectedNode.next;
+
+		return lastSelectedNode.item;
 	}
 
 	/**
@@ -212,43 +191,37 @@ public class LinkedList<E> {
 
 	}
 
-	public E remove(int i) {
+	public E remove(int index) {
 
 		if (size() == 0) {
 			throw new NoSuchElementException("Can't remove item from an empty list!");
 		}
 
-		if (i >= numItems || i < 0)
-			throw new IndexOutOfBoundsException("Index " + i + " is out of bounds for a list of size " + size() + "!");
+		if (index >= numItems || index < 0)
+			throw new IndexOutOfBoundsException(
+					"Index " + index + " is out of bounds for a list of size " + size() + "!");
 
-		if (i == 0) {
+		if (index == 0) {
 			return removeFirst();
 		}
 
-		if (i == size() - 1) {
+		if (index == size() - 1) {
 			return removeLast();
 		}
 
 		E result = null;
-		Node<E> curr = null;
-		int count;
 
-		if (i <= lastSelectedIndex || lastSelectedNode == head) {
-			curr = head;
-			count = 1;
-		} else {
-			curr = lastSelectedNode;
-			count = lastSelectedIndex + 1;
+		if (index <= lastSelectedIndex) {
+			lastSelectedNode = head;
+			lastSelectedIndex = 0;
 		}
 
-		for (; count < i; count++) {
-			curr = curr.next;
+		for (; lastSelectedIndex < index - 1; lastSelectedIndex++) {
+			lastSelectedNode = lastSelectedNode.next;
 		}
 
-		result = curr.next.item;
-		curr.next = curr.next.next;
-		lastSelectedNode = curr;
-		lastSelectedIndex = i - 1;
+		result = lastSelectedNode.next.item;
+		lastSelectedNode.next = lastSelectedNode.next.next;
 
 		numItems--;
 		return result;
@@ -269,20 +242,21 @@ public class LinkedList<E> {
 			head = null;
 			lastSelectedNode = head;
 		} else {
-			Node<E> curr;
+
 			// If the last selected node is already the last one, we can't remove it
 			// We need the second to last node to remove the last one
 			if (lastSelectedNode.next == null) {
-				curr = head;
-			} else {
-				curr = lastSelectedNode;
+				lastSelectedNode = head;
+				lastSelectedIndex = 0;
 			}
 
-			while (curr.next.next != null)
-				curr = curr.next;
-			result = curr.next.item;
-			curr.next = null;
-			lastSelectedNode = curr;
+			while (lastSelectedNode.next.next != null) {
+				lastSelectedNode = lastSelectedNode.next;
+				lastSelectedIndex++;
+			}
+
+			result = lastSelectedNode.next.item;
+			lastSelectedNode.next = null;
 		}
 		numItems--;
 		lastSelectedIndex = size() - 1;
