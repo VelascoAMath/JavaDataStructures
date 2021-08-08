@@ -1,3 +1,5 @@
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -27,7 +29,7 @@ import java.util.NoSuchElementException;
  *
  * @param <E>
  */
-public class LinkedList<E> {
+public class LinkedList<E> implements Collection{
 	Node<E> head;
 	Node<E> lastSelectedNode;
 	int lastSelectedIndex;
@@ -134,6 +136,8 @@ public class LinkedList<E> {
 
 		numItems++;
 	}
+	
+	
 
 	public E get() {
 		return getFirst();
@@ -318,5 +322,71 @@ public class LinkedList<E> {
 			}
 			return String.valueOf(item) + ":" + String.valueOf(next.item);
 		}
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Iterator iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object[] toArray() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object[] toArray(Object[] a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean add(Object e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean containsAll(Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addAll(Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean removeAll(Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean retainAll(Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
 	}
 }
