@@ -28,12 +28,12 @@ class DoubleLinkedListTest {
 		}
 
 		if (test.size() != 0) {
-			System.out.println("Size is " + test.size() + " instead of 0!");
+			fail("Size is " + test.size() + " instead of 0!");
 		}
 	}
 
 	@Test
-	void testIsEmpty() {
+	void testIsEmpty() throws Exception {
 		DoubleLinkedList<Integer> test = new DoubleLinkedList<>();
 
 		if (!test.isEmpty()) {
@@ -42,7 +42,6 @@ class DoubleLinkedListTest {
 
 		for (int seed = 0; seed < 100; seed++) {
 			test.removeAll();
-			System.out.println(seed);
 			Random gen = new Random(seed);
 			int numItems = 0;
 
@@ -50,7 +49,7 @@ class DoubleLinkedListTest {
 				// Randomly add an item
 				if (gen.nextBoolean()) {
 					int index = gen.nextInt(test.size() + 1);
-					test.add(0, index);
+					test.add(i, index);
 					numItems++;
 				} else if (numItems > 0) {
 					test.remove(gen.nextInt(test.size()));
@@ -68,16 +67,32 @@ class DoubleLinkedListTest {
 					fail("List isn't empty even when it has no items!");
 				}
 
-				if (test.lastSelectedIndex < -1) {
+				if (numItems == 0 && test.lastSelectedIndex != -1) {
+					fail("Last Selected Index is " + test.lastSelectedIndex + " instead of -1!");
+				}
+				if (numItems == 0 && test.lastSelectedNode != null) {
+					fail("Last selected node is set to " + test.lastSelectedNode + " instead of null!");
+				}
+				if (numItems == 0 && test.head != null) {
+					fail("Head is set to " + test.head + " instead of null!");
+				}
+
+				if (numItems == 0 && test.tail != null) {
+					fail("Tail is set to " + test.tail + " instead of null!");
+				}
+
+				if (numItems == 0 && test.lastSelectedIndex < -1) {
 					fail("Last index is less than -1!");
 				}
+
+				checkForConnection(test);
 			}
 		}
 
 	}
 
 	@Test
-	void testSize() {
+	void testSize() throws Exception {
 		DoubleLinkedList<Integer> test = new DoubleLinkedList<Integer>();
 		Random gen = new Random();
 
@@ -153,7 +168,7 @@ class DoubleLinkedListTest {
 //	}
 //
 	@Test
-	void testAddEInt() {
+	void testAddEInt() throws Exception {
 		DoubleLinkedList<Integer> test = new DoubleLinkedList<Integer>();
 		ArrayList<Integer> list = new ArrayList<>();
 
@@ -173,7 +188,7 @@ class DoubleLinkedListTest {
 			fail("add return an exception " + e.getStackTrace());
 		}
 
-		Random gen = new Random();
+		Random gen = new Random(1);
 		for (int i = 0; i < testSize; i++) {
 			if (test.size() != i) {
 				fail("DoubleLinkedList is size " + test.size() + " when it should be " + i);
@@ -224,10 +239,10 @@ class DoubleLinkedListTest {
 //		fail("Not yet implemented");
 //	}
 //
-	@Test
-	void testGet() {
-		testGetFirst();
-	}
+//	@Test
+//	void testGet() throws Exception {
+//		testGetFirst();
+//	}
 
 	@Test
 	void testGetInt() {
@@ -266,46 +281,46 @@ class DoubleLinkedListTest {
 
 		}
 
-		HashSet<Integer> testedSet = new HashSet<>();
-		Random generator = new Random();
+		ArrayList<Integer> list = new ArrayList<>();
+		for (int seed = 0; seed < 10; seed++) {
+			HashSet<Integer> testedSet = new HashSet<>();
+			Random generator = new Random(seed);
 
-		while (testedSet.size() < testSize) {
-			int testIndex = generator.nextInt(testSize);
+			test.removeAll();
+			list.clear();
+			for (int i = 0; i < testSize; i++) {
+				test.addLast(i);
+				list.add(i);
+				if (test.lastSelectedNode.item != test.get(test.lastSelectedIndex)) {
+					fail("Item at index " + test.lastSelectedIndex + " should be " + test.get(test.lastSelectedIndex)
+							+ " but is instead " + test.lastSelectedNode.item + "!");
+				}
+			}
 
-			testedSet.add(testIndex);
-			try {
+			while (testedSet.size() < testSize) {
+				int testIndex = generator.nextInt(testSize);
+
+				testedSet.add(testIndex);
+
+				if (test.get(testIndex) != test.get(testIndex)) {
+					fail("Getting in the same index returns two different numbers!");
+				}
+
 				if (test.get(testIndex) != testIndex) {
 					fail("Got the wrong item(" + test.get(testIndex) + ") in the index(" + testIndex + ")!");
 
 				}
-			} catch (Exception e) {
-				fail("get threw exception: " + e.getStackTrace());
-			}
-		}
 
-		test = new DoubleLinkedList<>();
-
-		for (int i = 0; i < testSize; i++) {
-			test.addLast(testSize - i);
-		}
-
-		while (testedSet.size() < testSize) {
-			int testIndex = generator.nextInt(testSize);
-
-			testedSet.add(testIndex);
-			try {
-				if (test.get(testIndex) != testSize - testIndex) {
-					fail("Got the wrong item(" + test.get(testIndex) + ") in the index(" + testIndex + ")!");
-
+				if (test.get(testIndex).compareTo(list.get(testIndex)) != 0) {
+					fail("Got item " + test.get(testIndex) + " instead of " + list.get(testIndex) + "!");
 				}
-			} catch (Exception e) {
-				fail("get threw exception: " + e.getStackTrace());
+
 			}
 		}
 	}
 
 	@Test
-	void testGetFirst() {
+	void testGetFirst() throws Exception {
 		DoubleLinkedList<Integer> test = new DoubleLinkedList<Integer>();
 
 		try {
@@ -319,18 +334,89 @@ class DoubleLinkedListTest {
 
 		for (int i = 0; i < testSize; i++) {
 			test.addFirst(i);
+//			if (test.lastSelectedIndex != i) {
+//				fail("LastSelectedIndex(" + test.lastSelectedIndex + ") isn't " + i + " for some reason!");
+//			}
+
+			if (test.getFirst() != test.get(0)) {
+				fail("GetFirst returns " + test.getFirst() + " at index " + i + "!");
+			}
+
+		}
+		checkForConnection(test);
+
+	}
+
+	public void checkForConnection(DoubleLinkedList<Integer> test) {
+		if (test.size() == 0) {
+			return;
+		}
+
+		if (test.size() == 1 && test.head != test.tail) {
+			fail("Head and tail aren't the same even though there's only one item!");
+		}
+
+		DoubleLinkedList<Integer>.Node<Integer> curr = test.head;
+		for (int j = 0; j < test.size() - 1; j++) {
+			if (curr.next.prev != curr) {
+				fail("The list is not properly connected!");
+			}
+		}
+
+		curr = test.head.next;
+		for (int j = 1; j < test.size(); j++) {
+			if (curr.prev.next != curr) {
+				fail("The list is not properly connected!");
+			}
+		}
+
+		curr = test.head;
+
+		while (curr != test.tail) {
+			if (curr.next == null) {
+				fail("Head is not connected to the tail!");
+			}
+			curr = curr.next;
+		}
+
+		while (curr != test.head) {
+			if (curr.prev == null) {
+				fail("Tail is not connected to the head!");
+			}
+			curr = curr.prev;
+		}
+	}
+
+	@Test
+	void testGetLast() throws Exception {
+		DoubleLinkedList<Integer> test = new DoubleLinkedList<Integer>();
+
+		try {
+			test.getLast();
+			fail("getFirst returns an item even when it's empty!");
+		} catch (NoSuchElementException e) {
+
+		} catch (Exception e) {
+			fail("getFirst threw exception: " + e.getStackTrace());
+		}
+
+		for (int i = 0; i < testSize; i++) {
+			test.addLast(i);
 			if (test.lastSelectedIndex != i) {
 				fail("LastSelectedIndex(" + test.lastSelectedIndex + ") isn't " + i + " for some reason!");
 			}
 
 			try {
-				if (test.getFirst() != test.get(0)) {
-					fail("GetFirst returns " + test.getFirst() + " at index " + i + "!");
+				if (test.getLast() != test.get(test.size() - 1)) {
+					fail("GetLast returns " + test.getLast() + " at index " + i + "!");
 				}
 			} catch (Exception e) {
 				fail("getFirst threw exception: " + e.getStackTrace());
 			}
 		}
+
+		checkForConnection(test);
+
 	}
 
 	@Test
@@ -421,7 +507,7 @@ class DoubleLinkedListTest {
 	}
 
 	@Test
-	void testToString() {
+	void testToString() throws Exception {
 		DoubleLinkedList<Integer> test = new DoubleLinkedList<Integer>();
 
 		if (test.toString().compareTo("[]") != 0) {
@@ -482,9 +568,10 @@ class DoubleLinkedListTest {
 
 		for (int i = 0; i < testSize; i++) {
 			test.addLast(i);
-			if (test.lastSelectedIndex != Math.max(i - 1, 0)) {
+			if (test.lastSelectedIndex != i) {
 				fail("Last selected index(" + test.lastSelectedIndex + ") isn't " + Math.max(i - 1, 0));
 			}
+			checkForConnection(test);
 		}
 
 		for (int i = testSize - 1; i >= 0; i--) {
@@ -495,10 +582,12 @@ class DoubleLinkedListTest {
 			if (test.lastSelectedIndex != i - 1) {
 				fail("Last selected index(" + test.lastSelectedIndex + ") isn't " + (i - 1) + "!");
 			}
+			checkForConnection(test);
 		}
 
 		for (int i = testSize - 1; i >= 0; i--) {
 			test.addLast(i);
+			checkForConnection(test);
 		}
 
 		for (int i = 0; i < testSize; i++) {
@@ -509,11 +598,22 @@ class DoubleLinkedListTest {
 			} catch (Exception e) {
 				fail("removeLast threw exception: " + e.getStackTrace());
 			}
+			checkForConnection(test);
+		}
+
+		if (test.size() != 0) {
+			fail("This list should be empty but is of size " + test.size() + "!");
+		}
+		if (test.head != null) {
+			fail("Empty list doesn't have the head point to null!");
+		}
+		if (test.tail != null) {
+			fail("Empty list doesn't have the tail point to null!");
 		}
 	}
 
 	@Test
-	public void testRemoveFirst() {
+	public void testRemoveFirst() throws Exception {
 		DoubleLinkedList<Integer> test = new DoubleLinkedList<Integer>();
 
 		try {
@@ -529,20 +629,20 @@ class DoubleLinkedListTest {
 			if (test.lastSelectedIndex != i) {
 				fail("Last selected index(" + test.lastSelectedIndex + ") isn't " + i);
 			}
+			checkForConnection(test);
 		}
 
 		for (int i = testSize - 1; i >= 0; i--) {
-			try {
-				if (test.removeFirst() != i) {
-					fail("Wrong value removed!");
-				}
-			} catch (Exception e) {
-				fail("removeLast threw exception: " + e.getStackTrace());
+			if (test.removeFirst() != i) {
+				fail("Wrong value removed!");
 			}
+			checkForConnection(test);
+
 		}
 
 		for (int i = testSize - 1; i >= 0; i--) {
 			test.addFirst(i);
+			checkForConnection(test);
 		}
 
 		for (int i = 0; i < testSize; i++) {
@@ -553,6 +653,17 @@ class DoubleLinkedListTest {
 			} catch (Exception e) {
 				fail("removeFirst threw exception: " + e.getStackTrace());
 			}
+			checkForConnection(test);
+		}
+
+		if (test.size() != 0) {
+			fail("This list should be empty but is of size " + test.size() + "!");
+		}
+		if (test.head != null) {
+			fail("Empty list doesn't have the head point to null!");
+		}
+		if (test.tail != null) {
+			fail("Empty list doesn't have the tail point to null!");
 		}
 
 	}

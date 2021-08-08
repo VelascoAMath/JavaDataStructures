@@ -44,7 +44,6 @@ public class DoubleLinkedList<E> {
 		return numItems;
 	}
 
-
 	/**
 	 * Adds an item to the end of the list.
 	 * 
@@ -54,7 +53,7 @@ public class DoubleLinkedList<E> {
 		addLast(newItem);
 	}
 
-	public void add(E newItem, int index) {
+	public void add(E newItem, int index) throws Exception {
 		if (index > numItems || index < 0)
 			throw new IndexOutOfBoundsException("Out of Bounds!");
 
@@ -66,28 +65,23 @@ public class DoubleLinkedList<E> {
 		} else if (index == 0) {
 			addFirst(newItem);
 		} else {
-			Node<E> curr = null;
-			if (lastSelectedIndex < index) {
-				curr = lastSelectedNode;
-				for (int i = lastSelectedIndex + 1; i < index; i++) {
-					curr = curr.next;
+			Node<E> newNode;
+			if (lastSelectedIndex < index - 1) {
+				while (lastSelectedIndex < index - 1) {
+					lastSelectedNode = lastSelectedNode.next;
+					lastSelectedIndex++;
 				}
-				lastSelectedIndex = index;
-				Node<E> newNode = new Node<E>(newItem, curr.next);
-				lastSelectedNode = newNode;
-				curr.next = newNode;
 
 			} else {
-				curr = head;
-
-				for (int i = 1; i < index; i++, curr = curr.next) {
-
+				while (lastSelectedIndex > index - 1) {
+					lastSelectedNode = lastSelectedNode.prev;
+					lastSelectedIndex--;
 				}
-				lastSelectedIndex = index;
-				Node<E> newNode = new Node<E>(newItem, curr.next);
-				curr.next = newNode;
-				lastSelectedNode = newNode;
+
 			}
+			newNode = new Node<E>(newItem, lastSelectedNode.next, lastSelectedNode);
+			lastSelectedNode.next = newNode;
+			newNode.next.prev = newNode;
 
 			numItems++;
 		}
@@ -98,15 +92,22 @@ public class DoubleLinkedList<E> {
 	 * Adds an item to the beginning of the list
 	 * 
 	 * @param firstItem - the item to add to the beginning of the list
+	 * @throws Exception
 	 */
-	public void addFirst(E firstItem) {
-		Node<E> curr = new Node<E>(firstItem);
-		curr.next = head;
-		head = curr;
+	public void addFirst(E firstItem) throws Exception {
+
+		Node<E> newNode = new Node<E>(firstItem, head, null);
+		head = newNode;
+
 		if (lastSelectedIndex == -1) {
+			if (tail != null) {
+				throw new Exception("Tail is pointing to " + tail + " when it's supposed to be null!");
+			}
+			tail = head;
 			lastSelectedIndex = 0;
 			lastSelectedNode = head;
 		} else {
+			head.next.prev = head;
 			lastSelectedIndex++;
 		}
 		numItems++;
@@ -116,11 +117,11 @@ public class DoubleLinkedList<E> {
 		if (head == null) {
 			head = new Node<E>(lastItem);
 			lastSelectedNode = head;
+			tail = head;
 		} else {
 			// Since numItems hasn't been updated, the index will (correctly) be the second
 			// to last index
-			tail.next = new Node<E>(lastItem);
-			tail.next.prev = tail;
+			tail.next = new Node<E>(lastItem, null, tail);
 			tail = tail.next;
 		}
 
@@ -140,11 +141,29 @@ public class DoubleLinkedList<E> {
 		if (index > numItems || index < 0)
 			throw new IndexOutOfBoundsException("Out of Bounds!");
 
-		Node<E> curr = head;
-		for (int i = 0; i < index; i++)
-			curr = curr.next;
+		if (index < Math.abs(index - lastSelectedIndex)) {
+			lastSelectedNode = head;
+			lastSelectedIndex = 0;
+		}
 
-		return curr.item;
+		if (size() - index < Math.abs(index - lastSelectedIndex)) {
+			lastSelectedNode = tail;
+			lastSelectedIndex = size() - 1;
+		}
+
+		if (lastSelectedIndex < index) {
+			for (; lastSelectedIndex < index; lastSelectedIndex++) {
+				lastSelectedNode = lastSelectedNode.next;
+			}
+		}
+
+		if (index < lastSelectedIndex) {
+			for (; index < lastSelectedIndex; lastSelectedIndex--) {
+				lastSelectedNode = lastSelectedNode.prev;
+			}
+		}
+
+		return lastSelectedNode.item;
 	}
 
 	/**
@@ -160,7 +179,10 @@ public class DoubleLinkedList<E> {
 	}
 
 	public E getLast() {
-		return get(size() - 1);
+		if (size() == 0) {
+			throw new NoSuchElementException("No first item since the list is empty!");
+		}
+		return tail.item;
 	}
 
 	public E removeFirst() {
@@ -174,6 +196,7 @@ public class DoubleLinkedList<E> {
 		lastSelectedNode = head;
 		if (numItems == 0) {
 			lastSelectedIndex = -1;
+			tail = null;
 		} else {
 			lastSelectedIndex = 0;
 		}
@@ -199,25 +222,32 @@ public class DoubleLinkedList<E> {
 		}
 
 		E result = null;
-		Node<E> curr = null;
-		int count;
 
-		if (i <= lastSelectedIndex || lastSelectedNode == head) {
-			curr = head;
-			count = 1;
-		} else {
-			curr = lastSelectedNode;
-			count = lastSelectedIndex + 1;
+		if (i - 1 < Math.abs(i - 1 - lastSelectedIndex)) {
+			lastSelectedNode = head;
+			lastSelectedIndex = 0;
 		}
 
-		for (; count < i; count++) {
-			curr = curr.next;
+		if (size() - 1 - i - 1 < Math.abs(i - 1 - lastSelectedIndex)) {
+			lastSelectedNode = tail;
+			lastSelectedIndex = size() - 1;
 		}
 
-		result = curr.next.item;
-		curr.next = curr.next.next;
-		lastSelectedNode = curr;
-		lastSelectedIndex = i - 1;
+		if (lastSelectedIndex < i - 1) {
+			for (; lastSelectedIndex < i - 1; lastSelectedIndex++) {
+				lastSelectedNode = lastSelectedNode.next;
+			}
+		}
+
+		if (i - 1 < lastSelectedIndex) {
+			for (; i - 1 < lastSelectedIndex; lastSelectedIndex--) {
+				lastSelectedNode = lastSelectedNode.prev;
+			}
+		}
+
+		result = lastSelectedNode.next.item;
+		lastSelectedNode.next = lastSelectedNode.next.next;
+		lastSelectedNode.next.prev = lastSelectedNode;
 
 		numItems--;
 		return result;
@@ -233,27 +263,18 @@ public class DoubleLinkedList<E> {
 		E result = null;
 		if (size() == 0) {
 			throw new NoSuchElementException("Attempting to retreive the last item from an empty LinkedList!");
-		} else if (size() == 1) {
-			result = head.item;
-			head = null;
-			lastSelectedNode = head;
-		} else {
-			Node<E> curr;
-			// If the last selected node is already the last one, we can't remove it
-			// We need the second to last node to remove the last one
-			if (lastSelectedNode.next == null) {
-				curr = head;
-			} else {
-				curr = lastSelectedNode;
-			}
+		}
 
-			while (curr.next.next != null)
-				curr = curr.next;
-			result = curr.next.item;
-			curr.next = null;
-			lastSelectedNode = curr;
+		result = tail.item;
+		if (size() == 1) {
+			head = null;
+			tail = null;
+		} else {
+			tail = tail.prev;
+			tail.next = null;
 		}
 		numItems--;
+		lastSelectedNode = tail;
 		lastSelectedIndex = size() - 1;
 		return result;
 	}
@@ -264,6 +285,7 @@ public class DoubleLinkedList<E> {
 	 */
 	public void removeAll() {
 		head = null;
+		tail = null;
 		numItems = 0;
 		lastSelectedNode = null;
 		lastSelectedIndex = -1;
