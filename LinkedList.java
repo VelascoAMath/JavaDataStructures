@@ -205,10 +205,6 @@ public class LinkedList<E> {
 			return removeFirst();
 		}
 
-		if (index == size() - 1) {
-			return removeLast();
-		}
-
 		E result = null;
 
 		if (index <= lastSelectedIndex) {
@@ -234,33 +230,7 @@ public class LinkedList<E> {
 	 * @throws NoSuchElementException
 	 */
 	public E removeLast() {
-		E result = null;
-		if (size() == 0) {
-			throw new NoSuchElementException("Attempting to retreive the last item from an empty LinkedList!");
-		} else if (size() == 1) {
-			result = head.item;
-			head = null;
-			lastSelectedNode = head;
-		} else {
-
-			// If the last selected node is already the last one, we can't remove it
-			// We need the second to last node to remove the last one
-			if (lastSelectedNode.next == null) {
-				lastSelectedNode = head;
-				lastSelectedIndex = 0;
-			}
-
-			while (lastSelectedNode.next.next != null) {
-				lastSelectedNode = lastSelectedNode.next;
-				lastSelectedIndex++;
-			}
-
-			result = lastSelectedNode.next.item;
-			lastSelectedNode.next = null;
-		}
-		numItems--;
-		lastSelectedIndex = size() - 1;
-		return result;
+		return remove(size() - 1);
 	}
 
 	/**

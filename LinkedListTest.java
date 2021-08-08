@@ -23,7 +23,7 @@ class LinkedListTest {
 			fail("Head is set to " + test.head + " instead of null!");
 		}
 		if(test.size() != 0) {
-			System.out.println("Size is " + test.size() + " instead of 0!");
+			fail("Size is " + test.size() + " instead of 0!");
 		}
 	}
 
@@ -37,7 +37,7 @@ class LinkedListTest {
 
 		for (int seed = 0; seed < 100; seed++) {
 			test.removeAll();
-			System.out.println(seed);
+//			System.out.println(seed);
 			Random gen = new Random(seed);
 			int numItems = 0;
 
