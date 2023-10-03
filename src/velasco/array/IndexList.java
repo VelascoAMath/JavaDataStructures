@@ -32,4 +32,8 @@ public class IndexList implements IndexCollection {
     public Iterator<Integer> iterator() {
         return indexList.iterator();
     }
+
+    public int get(int i){
+        return indexList.get(i);
+    }
 }
