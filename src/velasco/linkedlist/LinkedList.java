@@ -65,15 +65,6 @@ public class LinkedList<E> implements Collection{
 		return numItems;
 	}
 
-	/**
-	 * Adds an item to the end of the list.
-	 * 
-	 * @param newItem to add to the list
-	 */
-	public void add(E newItem) {
-		addLast(newItem);
-	}
-
 	public void add(E newItem, int index) {
 		if (index > numItems || index < 0)
 			throw new IndexOutOfBoundsException("Out of Bounds!");
@@ -122,7 +113,7 @@ public class LinkedList<E> implements Collection{
 		numItems++;
 	}
 
-	public void addLast(E lastItem) {
+	public boolean addLast(E lastItem) {
 		if (head == null) {
 			head = new Node<E>(lastItem);
 			lastSelectedIndex = 0;
@@ -137,6 +128,7 @@ public class LinkedList<E> implements Collection{
 		}
 
 		numItems++;
+		return true;
 	}
 	
 	
@@ -344,16 +336,48 @@ public class LinkedList<E> implements Collection{
 		return null;
 	}
 
+	/**
+	 * Ensures that this collection contains the specified element (optional
+	 * operation).  Returns {@code true} if this collection changed as a
+	 * result of the call.  (Returns {@code false} if this collection does
+	 * not permit duplicates and already contains the specified element.)<p>
+	 * <p>
+	 * Collections that support this operation may place limitations on what
+	 * elements may be added to this collection.  In particular, some
+	 * collections will refuse to add {@code null} elements, and others will
+	 * impose restrictions on the type of elements that may be added.
+	 * Collection classes should clearly specify in their documentation any
+	 * restrictions on what elements may be added.<p>
+	 * <p>
+	 * If a collection refuses to add a particular element for any reason
+	 * other than that it already contains the element, it <i>must</i> throw
+	 * an exception (rather than returning {@code false}).  This preserves
+	 * the invariant that a collection always contains the specified element
+	 * after this call returns.
+	 *
+	 * @param newItem element whose presence in this collection is to be ensured
+	 * @return {@code true} if this collection changed as a result of the
+	 * call
+	 * @throws UnsupportedOperationException if the {@code add} operation
+	 *                                       is not supported by this collection
+	 * @throws ClassCastException            if the class of the specified element
+	 *                                       prevents it from being added to this collection
+	 * @throws NullPointerException          if the specified element is null and this
+	 *                                       collection does not permit null elements
+	 * @throws IllegalArgumentException      if some property of the element
+	 *                                       prevents it from being added to this collection
+	 * @throws IllegalStateException         if the element cannot be added at this
+	 *                                       time due to insertion restrictions
+	 */
+	@Override
+	public boolean add(Object newItem) {
+		return addLast((E) newItem);
+	}
+
 	@Override
 	public Object[] toArray(Object[] a) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public boolean add(Object e) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
