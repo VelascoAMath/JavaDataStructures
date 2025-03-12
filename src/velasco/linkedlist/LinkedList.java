@@ -272,20 +272,21 @@ public class LinkedList<E> implements Collection<E>{
 		/**
 		 * Makes a node that stores an element.
 		 * 
-		 * @param Eitem
+		 * @param item - item to store
 		 */
-		public Node(E item) {
+		public Node(T item) {
 			this.item = item;
 			next = null;
 		}
 
+
 		/**
-		 * Makes a node that connects to another and has an element.
-		 * 
-		 * @param E       item
-		 * @param Node<E> nextNode
+		 * Makes a node that connects to another and has an element
+		 *
+		 * @param item - Item to hold
+		 * @param nextNode - node to which the new node will point
 		 */
-		public Node(E item, Node<E> nextNode) {
+		public Node(T item, Node<T> nextNode) {
 			this.item = item;
 			next = nextNode;
 		}
