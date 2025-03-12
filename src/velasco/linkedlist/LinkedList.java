@@ -68,8 +68,7 @@ public class LinkedList<E> implements Collection<E>{
 				lastSelectedNode = lastSelectedNode.next;
 			}
 
-			Node<E> newNode = new Node<E>(newItem, lastSelectedNode.next);
-			lastSelectedNode.next = newNode;
+            lastSelectedNode.next = new Node<E>(newItem, lastSelectedNode.next);
 
 			numItems++;
 		}
