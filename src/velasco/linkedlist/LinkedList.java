@@ -293,9 +293,9 @@ public class LinkedList<E> implements Collection<E>{
 
 		public String toString() {
 			if (next == null) {
-				return String.valueOf(item) + ":Null";
+				return item + ":Null";
 			}
-			return String.valueOf(item) + ":" + String.valueOf(next.item);
+			return item + ":" + next.item;
 		}
 	}
 
