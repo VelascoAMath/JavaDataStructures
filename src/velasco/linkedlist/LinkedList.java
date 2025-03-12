@@ -373,7 +373,13 @@ public class LinkedList<E> implements Collection<E>{
 	@Override
 	public Object[] toArray(Object[] a) {
 		// TODO Auto-generated method stub
-		return null;
+		LinkedList<E> result = new LinkedList<>();
+		for(Object o : a){
+			if(this.contains(o)){
+				result.add(o);
+			}
+		}
+		return result.toArray();
 	}
 
 	@Override
