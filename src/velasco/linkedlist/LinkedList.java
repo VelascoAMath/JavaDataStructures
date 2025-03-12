@@ -4,30 +4,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/**
- * @author Nalfredo
- *
- */
 
 /**
  * It's my own Linked List.
- * 
+ *
  * @author VelascoAMath
- *
- * @param <E>
- */
-/**
- * @author Nalfredo
- *
- * @param <E>
- */
-/**
- * @author Nalfredo
- *
- * @param <E>
- */
-/**
- * @author Nalfredo
  *
  * @param <E>
  */
