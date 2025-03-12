@@ -68,7 +68,7 @@ public class LinkedList<E> implements Collection<E>{
 				lastSelectedNode = lastSelectedNode.next;
 			}
 
-            lastSelectedNode.next = new Node<E>(newItem, lastSelectedNode.next);
+            lastSelectedNode.next = new Node<>(newItem, lastSelectedNode.next);
 
 			numItems++;
 		}
@@ -81,7 +81,7 @@ public class LinkedList<E> implements Collection<E>{
 	 * @param firstItem - the item to add to the beginning of the list
 	 */
 	public void addFirst(E firstItem) {
-		Node<E> newNode = new Node<E>(firstItem);
+		Node<E> newNode = new Node<>(firstItem);
 		newNode.next = head;
 		head = newNode;
 		if (lastSelectedIndex == -1) {
@@ -104,7 +104,7 @@ public class LinkedList<E> implements Collection<E>{
 				lastSelectedIndex++;
 			}
 
-			lastSelectedNode.next = new Node<E>(lastItem);
+			lastSelectedNode.next = new Node<>(lastItem);
 		}
 
 		numItems++;
@@ -183,7 +183,7 @@ public class LinkedList<E> implements Collection<E>{
 			return removeFirst();
 		}
 
-		E result = null;
+		E result;
 
 		if (index <= lastSelectedIndex) {
 			lastSelectedNode = head;
