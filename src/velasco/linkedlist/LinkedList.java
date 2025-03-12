@@ -206,7 +206,7 @@ public class LinkedList<E> implements Collection<E>{
 	 * Returns and removes the last item in the list
 	 * 
 	 * @return the list item in the list
-	 * @throws NoSuchElementException
+	 * @throws NoSuchElementException - Thrown if the list is empty
 	 */
 	public E removeLast() {
 		return remove(size() - 1);
@@ -264,11 +264,11 @@ public class LinkedList<E> implements Collection<E>{
 	 * 
 	 * @author CoolerMaster
 	 *
-	 * @param <E>
+	 * @param <T>
 	 */
-	class Node<E> {
-		E item;
-		Node<E> next;
+    static class Node<T> {
+		T item;
+		Node<T> next;
 
 		/**
 		 * Makes a node that stores an element.
