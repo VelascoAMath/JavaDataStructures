@@ -305,10 +305,25 @@ public class LinkedList<E> implements Collection<E>{
 		return false;
 	}
 
+	@Nonnull
 	@Override
-	public Iterator iterator() {
+	public Iterator<E> iterator() {
 		// TODO Auto-generated method stub
-		return null;
+		return new Iterator<>() {
+
+            Node<E> curr = head;
+
+            @Override
+            public boolean hasNext() {
+                return curr.next != null;
+            }
+
+            @Override
+            public E next() {
+                curr = curr.next;
+                return curr.item;
+            }
+        };
 	}
 
 	@Override
