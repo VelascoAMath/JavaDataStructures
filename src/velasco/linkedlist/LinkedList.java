@@ -1,5 +1,6 @@
 package src.velasco.linkedlist;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -327,6 +328,7 @@ public class LinkedList<E> implements Collection<E>{
 	}
 
 	@Override
+	@Nonnull
 	public Object[] toArray() {
 		// TODO Auto-generated method stub
 		Object[] result = new Object[size()];
@@ -375,6 +377,7 @@ public class LinkedList<E> implements Collection<E>{
 	}
 
 	@Override
+	@Nonnull
 	public Object[] toArray(Object[] a) {
 		// TODO Auto-generated method stub
 		LinkedList<E> result = new LinkedList<>();
@@ -393,25 +396,25 @@ public class LinkedList<E> implements Collection<E>{
 	}
 
 	@Override
-	public boolean containsAll(Collection c) {
+	public boolean containsAll(@Nonnull Collection c) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean addAll(Collection c) {
+	public boolean addAll(@Nonnull Collection c) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean removeAll(Collection c) {
+	public boolean removeAll(@Nonnull Collection c) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public boolean retainAll(Collection c) {
+	public boolean retainAll(@Nonnull Collection c) {
 		// TODO Auto-generated method stub
 		return false;
 	}
