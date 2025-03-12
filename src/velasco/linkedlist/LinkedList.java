@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
  *
  * @param <E>
  */
-public class LinkedList<E> implements Collection{
+public class LinkedList<E> implements Collection<E>{
 	Node<E> head;
 	Node<E> lastSelectedNode;
 	int lastSelectedIndex;
