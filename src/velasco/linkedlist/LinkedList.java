@@ -95,7 +95,7 @@ public class LinkedList<E> implements Collection<E>{
 
 	public boolean addLast(E lastItem) {
 		if (head == null) {
-			head = new Node<E>(lastItem);
+			head = new Node<>(lastItem);
 			lastSelectedIndex = 0;
 			lastSelectedNode = head;
 		} else {
