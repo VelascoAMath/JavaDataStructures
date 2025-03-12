@@ -3,7 +3,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
-public class BTree implements Set, Collection {
+public class BTree<E> implements Set<E>, Collection<E> {
 
 	int degree;
 	BHolder root;
