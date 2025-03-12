@@ -1,27 +1,48 @@
-import java.util.NoSuchElementException;
+package src.velasco.linkedlist;
 
-/**
- * 
- */
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * @author Nalfredo
  *
  */
-public class DoubleLinkedList<E> {
+
+/**
+ * It's my own Linked List.
+ * 
+ * @author VelascoAMath
+ *
+ * @param <E>
+ */
+/**
+ * @author Nalfredo
+ *
+ * @param <E>
+ */
+/**
+ * @author Nalfredo
+ *
+ * @param <E>
+ */
+/**
+ * @author Nalfredo
+ *
+ * @param <E>
+ */
+public class LinkedList<E> implements Collection{
 	Node<E> head;
-	Node<E> tail;
-	private int numItems;
 	Node<E> lastSelectedNode;
 	int lastSelectedIndex;
+	private int numItems;
 
 	/**
 	 * 
 	 */
-	public DoubleLinkedList() {
+	public LinkedList() {
 		numItems = 0;
 		head = null;
-		tail = null;
 		lastSelectedNode = null;
 		lastSelectedIndex = -1;
 	}
@@ -53,7 +74,7 @@ public class DoubleLinkedList<E> {
 		addLast(newItem);
 	}
 
-	public void add(E newItem, int index) throws Exception {
+	public void add(E newItem, int index) {
 		if (index > numItems || index < 0)
 			throw new IndexOutOfBoundsException("Out of Bounds!");
 
@@ -65,23 +86,18 @@ public class DoubleLinkedList<E> {
 		} else if (index == 0) {
 			addFirst(newItem);
 		} else {
-			Node<E> newNode;
-			if (lastSelectedIndex < index - 1) {
-				while (lastSelectedIndex < index - 1) {
-					lastSelectedNode = lastSelectedNode.next;
-					lastSelectedIndex++;
-				}
-
-			} else {
-				while (lastSelectedIndex > index - 1) {
-					lastSelectedNode = lastSelectedNode.prev;
-					lastSelectedIndex--;
-				}
+			if (index <= lastSelectedIndex) {
+				lastSelectedNode = head;
+				lastSelectedIndex = 0;
 
 			}
-			newNode = new Node<E>(newItem, lastSelectedNode.next, lastSelectedNode);
+			
+			for (; lastSelectedIndex < index - 1; lastSelectedIndex++) {
+				lastSelectedNode = lastSelectedNode.next;
+			}
+
+			Node<E> newNode = new Node<E>(newItem, lastSelectedNode.next);
 			lastSelectedNode.next = newNode;
-			newNode.next.prev = newNode;
 
 			numItems++;
 		}
@@ -92,22 +108,15 @@ public class DoubleLinkedList<E> {
 	 * Adds an item to the beginning of the list
 	 * 
 	 * @param firstItem - the item to add to the beginning of the list
-	 * @throws Exception
 	 */
-	public void addFirst(E firstItem) throws Exception {
-
-		Node<E> newNode = new Node<E>(firstItem, head, null);
+	public void addFirst(E firstItem) {
+		Node<E> newNode = new Node<E>(firstItem);
+		newNode.next = head;
 		head = newNode;
-
 		if (lastSelectedIndex == -1) {
-			if (tail != null) {
-				throw new Exception("Tail is pointing to " + tail + " when it's supposed to be null!");
-			}
-			tail = head;
 			lastSelectedIndex = 0;
 			lastSelectedNode = head;
 		} else {
-			head.next.prev = head;
 			lastSelectedIndex++;
 		}
 		numItems++;
@@ -116,19 +125,21 @@ public class DoubleLinkedList<E> {
 	public void addLast(E lastItem) {
 		if (head == null) {
 			head = new Node<E>(lastItem);
+			lastSelectedIndex = 0;
 			lastSelectedNode = head;
-			tail = head;
 		} else {
-			// Since numItems hasn't been updated, the index will (correctly) be the second
-			// to last index
-			tail.next = new Node<E>(lastItem, null, tail);
-			tail = tail.next;
+			while (lastSelectedNode.next != null) {
+				lastSelectedNode = lastSelectedNode.next;
+				lastSelectedIndex++;
+			}
+
+			lastSelectedNode.next = new Node<E>(lastItem);
 		}
 
 		numItems++;
-		lastSelectedNode = tail;
-		lastSelectedIndex = numItems - 1;
 	}
+	
+	
 
 	public E get() {
 		return getFirst();
@@ -141,27 +152,13 @@ public class DoubleLinkedList<E> {
 		if (index > numItems || index < 0)
 			throw new IndexOutOfBoundsException("Out of Bounds!");
 
-		if (index < Math.abs(index - lastSelectedIndex)) {
+		if (lastSelectedIndex > index) {
 			lastSelectedNode = head;
 			lastSelectedIndex = 0;
 		}
 
-		if (size() - index < Math.abs(index - lastSelectedIndex)) {
-			lastSelectedNode = tail;
-			lastSelectedIndex = size() - 1;
-		}
-
-		if (lastSelectedIndex < index) {
-			for (; lastSelectedIndex < index; lastSelectedIndex++) {
-				lastSelectedNode = lastSelectedNode.next;
-			}
-		}
-
-		if (index < lastSelectedIndex) {
-			for (; index < lastSelectedIndex; lastSelectedIndex--) {
-				lastSelectedNode = lastSelectedNode.prev;
-			}
-		}
+		for (; lastSelectedIndex < index; lastSelectedIndex++)
+			lastSelectedNode = lastSelectedNode.next;
 
 		return lastSelectedNode.item;
 	}
@@ -179,10 +176,7 @@ public class DoubleLinkedList<E> {
 	}
 
 	public E getLast() {
-		if (size() == 0) {
-			throw new NoSuchElementException("No first item since the list is empty!");
-		}
-		return tail.item;
+		return get(size() - 1);
 	}
 
 	public E removeFirst() {
@@ -196,7 +190,6 @@ public class DoubleLinkedList<E> {
 		lastSelectedNode = head;
 		if (numItems == 0) {
 			lastSelectedIndex = -1;
-			tail = null;
 		} else {
 			lastSelectedIndex = 0;
 		}
@@ -204,50 +197,33 @@ public class DoubleLinkedList<E> {
 
 	}
 
-	public E remove(int i) {
+	public E remove(int index) {
 
 		if (size() == 0) {
 			throw new NoSuchElementException("Can't remove item from an empty list!");
 		}
 
-		if (i >= numItems || i < 0)
-			throw new IndexOutOfBoundsException("Index " + i + " is out of bounds for a list of size " + size() + "!");
+		if (index >= numItems || index < 0)
+			throw new IndexOutOfBoundsException(
+					"Index " + index + " is out of bounds for a list of size " + size() + "!");
 
-		if (i == 0) {
+		if (index == 0) {
 			return removeFirst();
-		}
-
-		if (i == size() - 1) {
-			return removeLast();
 		}
 
 		E result = null;
 
-		if (i - 1 < Math.abs(i - 1 - lastSelectedIndex)) {
+		if (index <= lastSelectedIndex) {
 			lastSelectedNode = head;
 			lastSelectedIndex = 0;
 		}
 
-		if (size() - 1 - i - 1 < Math.abs(i - 1 - lastSelectedIndex)) {
-			lastSelectedNode = tail;
-			lastSelectedIndex = size() - 1;
-		}
-
-		if (lastSelectedIndex < i - 1) {
-			for (; lastSelectedIndex < i - 1; lastSelectedIndex++) {
-				lastSelectedNode = lastSelectedNode.next;
-			}
-		}
-
-		if (i - 1 < lastSelectedIndex) {
-			for (; i - 1 < lastSelectedIndex; lastSelectedIndex--) {
-				lastSelectedNode = lastSelectedNode.prev;
-			}
+		for (; lastSelectedIndex < index - 1; lastSelectedIndex++) {
+			lastSelectedNode = lastSelectedNode.next;
 		}
 
 		result = lastSelectedNode.next.item;
 		lastSelectedNode.next = lastSelectedNode.next.next;
-		lastSelectedNode.next.prev = lastSelectedNode;
 
 		numItems--;
 		return result;
@@ -260,23 +236,7 @@ public class DoubleLinkedList<E> {
 	 * @throws NoSuchElementException
 	 */
 	public E removeLast() {
-		E result = null;
-		if (size() == 0) {
-			throw new NoSuchElementException("Attempting to retreive the last item from an empty LinkedList!");
-		}
-
-		result = tail.item;
-		if (size() == 1) {
-			head = null;
-			tail = null;
-		} else {
-			tail = tail.prev;
-			tail.next = null;
-		}
-		numItems--;
-		lastSelectedNode = tail;
-		lastSelectedIndex = size() - 1;
-		return result;
+		return remove(size() - 1);
 	}
 
 	/**
@@ -285,7 +245,6 @@ public class DoubleLinkedList<E> {
 	 */
 	public void removeAll() {
 		head = null;
-		tail = null;
 		numItems = 0;
 		lastSelectedNode = null;
 		lastSelectedIndex = -1;
@@ -312,17 +271,31 @@ public class DoubleLinkedList<E> {
 		}
 	}
 
+//	/**
+//	 * @param args
+//	 */
+//	public static void main(String[] args) {
+//		src.velasco.linkedlist.LinkedList<Integer> a = new src.velasco.linkedlist.LinkedList<Integer>();
+//
+//		for (int i = 0; i < 10000; i++) {
+//			a.addLast(i);
+//		}
+//
+//		while (!a.isEmpty()) {
+//			System.out.println(a.removeLast());
+//		}
+//	}
+
 	/**
-	 * It's a Node for DoubleLinkedLists.
+	 * It's a Node for LinkedLists.
 	 * 
-	 * @author VelascoAMath
+	 * @author CoolerMaster
 	 *
 	 * @param <E>
 	 */
 	class Node<E> {
 		E item;
 		Node<E> next;
-		Node<E> prev;
 
 		/**
 		 * Makes a node that stores an element.
@@ -332,7 +305,6 @@ public class DoubleLinkedList<E> {
 		public Node(E item) {
 			this.item = item;
 			next = null;
-			prev = null;
 		}
 
 		/**
@@ -346,14 +318,77 @@ public class DoubleLinkedList<E> {
 			next = nextNode;
 		}
 
-		public Node(E item, Node<E> nextNode, Node<E> prevNode) {
-			this.item = item;
-			next = nextNode;
-			prev = prevNode;
-		}
-
 		public String toString() {
-			return String.valueOf(item);
+			if (next == null) {
+				return String.valueOf(item) + ":Null";
+			}
+			return String.valueOf(item) + ":" + String.valueOf(next.item);
 		}
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Iterator iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object[] toArray() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object[] toArray(Object[] a) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean add(Object e) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean containsAll(Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean addAll(Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean removeAll(Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean retainAll(Collection c) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
 	}
 }

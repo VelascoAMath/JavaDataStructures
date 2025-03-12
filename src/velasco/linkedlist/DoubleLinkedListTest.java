@@ -1,3 +1,5 @@
+package src.velasco.linkedlist;
+
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ class DoubleLinkedListTest {
 		DoubleLinkedList<Integer> test = new DoubleLinkedList<>();
 
 		if (!test.isEmpty()) {
-			fail("New DoubleLinkedList is not empty!");
+			fail("New src.velasco.linkedlist.DoubleLinkedList is not empty!");
 		}
 
 		for (int seed = 0; seed < 100; seed++) {
@@ -191,10 +193,10 @@ class DoubleLinkedListTest {
 		Random gen = new Random(1);
 		for (int i = 0; i < testSize; i++) {
 			if (test.size() != i) {
-				fail("DoubleLinkedList is size " + test.size() + " when it should be " + i);
+				fail("src.velasco.linkedlist.DoubleLinkedList is size " + test.size() + " when it should be " + i);
 			}
 			if (test.size() != list.size()) {
-				fail("DoubleLinkedList is size " + test.size() + " while list is size " + list.size() + "!");
+				fail("src.velasco.linkedlist.DoubleLinkedList is size " + test.size() + " while list is size " + list.size() + "!");
 			}
 			int index = gen.nextInt(test.size() + 1);
 			Integer item = i;
@@ -226,7 +228,7 @@ class DoubleLinkedListTest {
 		}
 		for (int j = 0; j < list.size(); j++) {
 			if (list.get(j) != test.get(j)) {
-				fail("Items in arraylist(" + list.get(j) + ") and DoubleLinkedList(" + test.get(j) + ") at index " + j
+				fail("Items in arraylist(" + list.get(j) + ") and src.velasco.linkedlist.DoubleLinkedList(" + test.get(j) + ") at index " + j
 						+ " don't match up!");
 			}
 		}

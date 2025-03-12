@@ -1,3 +1,5 @@
+package src.velasco.linkedlist;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ class LinkedListTest {
 		LinkedList<Integer> test = new LinkedList<>();
 
 		if (!test.isEmpty()) {
-			fail("New LinkedList is not empty!");
+			fail("New src.velasco.linkedlist.LinkedList is not empty!");
 		}
 
 		for (int seed = 0; seed < 100; seed++) {
@@ -171,10 +173,10 @@ class LinkedListTest {
 		Random gen = new Random();
 		for (int i = 0; i < testSize; i++) {
 			if (test.size() != i) {
-				fail("LinkedList is size " + test.size() + " when it should be " + i);
+				fail("src.velasco.linkedlist.LinkedList is size " + test.size() + " when it should be " + i);
 			}
 			if (test.size() != list.size()) {
-				fail("LinkedList is size " + test.size() + " while list is size " + list.size() + "!");
+				fail("src.velasco.linkedlist.LinkedList is size " + test.size() + " while list is size " + list.size() + "!");
 			}
 			int index = gen.nextInt(test.size() + 1);
 			Integer item = i;
