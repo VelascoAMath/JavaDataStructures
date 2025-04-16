@@ -35,7 +35,7 @@ public class SecretFile {
 			salt = new byte[16];
 			new SecureRandom().nextBytes(salt);
 
-			SecretKey secretKey = getKeyFromPassword(password, toHexString(salt));
+			SecretKey secretKey = getKeyFromPassword(password, salt);
 
 			cipher.init(mode, secretKey, iv);
 			calculateDigest();
