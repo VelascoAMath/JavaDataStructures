@@ -2,28 +2,28 @@ package src.velasco.encryption;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 import java.util.Base64;
 import java.util.Scanner;
 
 public class CipherHelper {
 
     public static final String ALGORITHM = "AES/CBC/PKCS5Padding";
-//    public static final String ALGORITHM = "AES/CTR/NoPadding";
 
-    public static SecretKey getKeyFromPassword(String password, String salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt.getBytes(), 655536, 256);
-        SecretKey secretKey = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), "AES");
-        return secretKey;
+
+    public static SecretKey getKeyFromPassword(String password, String salt) {
+        return getKeyFromPassword(password, salt.getBytes());
+    }
+
+    public static SecretKey getKeyFromPassword(String password, byte[] salt) {
+        Argon2PasswordEncoder encoder = new Argon2PasswordEncoder();
+        encoder.setSalt(salt);
+        return new SecretKeySpec(encoder.hash(password), "AES");
     }
 
     public static IvParameterSpec generateIv() {
@@ -51,7 +51,7 @@ public class CipherHelper {
     public static String toHexString(byte[] array){
         StringBuilder stringBuilder = new StringBuilder();
         for(byte a: array){
-            stringBuilder.append(String.format("%x", a));
+            stringBuilder.append(String.format("%02x", a));
         }
         return stringBuilder.toString();
     }
@@ -75,9 +75,9 @@ public class CipherHelper {
         }
         return password;
     }
-    public static void main(String[] args) throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
+    public static void main(String[] args) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, IOException {
         String password = "Strong Password";
-        String salt = "Y89KJmL&mggm&&lq";
+        String salt = "super-long-salt";
 
         SecretKey secretKey = getKeyFromPassword(password, salt);
 
