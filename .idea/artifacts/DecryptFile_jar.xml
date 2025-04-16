@@ -16,11 +16,6 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/junit/platform/junit-platform-engine/1.8.1/junit-platform-engine-1.8.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/junit/junit/4.13.1/junit-4.13.1.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/Documents/Tools/commons-io-2.18.0/commons-io-2.18.0-javadoc.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/Documents/Tools/commons-io-2.18.0/commons-io-2.18.0-sources.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/Documents/Tools/commons-io-2.18.0/commons-io-2.18.0-test-sources.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/Documents/Tools/commons-io-2.18.0/commons-io-2.18.0-tests.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$USER_HOME$/Documents/Tools/commons-io-2.18.0/commons-io-2.18.0.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
