@@ -1,4 +1,4 @@
-package src.velasco.encryption;
+package velasco.encryption;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;

@@ -1,4 +1,4 @@
-package src.velasco.encryption;
+package velasco.encryption;
 
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
@@ -8,7 +8,7 @@ import java.security.*;
 import java.util.Arrays;
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
-import static src.velasco.encryption.CipherHelper.*;
+import static velasco.encryption.CipherHelper.*;
 
 public class SecretFile {
 
@@ -164,7 +164,7 @@ public class SecretFile {
 		System.arraycopy(buffer, 0, digest, 16, buffer.length);
 
 
-		SecretKey secretKey = CipherHelper.getKeyFromPassword(password, salt);
+		SecretKey secretKey = getKeyFromPassword(password, salt);
 
 		cipher.init(Cipher.DECRYPT_MODE, secretKey, iv);
 

@@ -1,11 +1,11 @@
-package src.velasco.encryption;
+package velasco.encryption;
 
 import org.apache.commons.io.FilenameUtils;
 
 import javax.crypto.Cipher;
 import java.io.File;
 
-import static src.velasco.encryption.CipherHelper.promptUserForPassword;
+import static velasco.encryption.CipherHelper.promptUserForPassword;
 
 
 /**

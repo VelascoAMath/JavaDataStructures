@@ -1,4 +1,4 @@
-package src.velasco.encryption;
+package velasco.encryption;
 
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
